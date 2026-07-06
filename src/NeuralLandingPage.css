@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  color: #000000;
+}
+
+.layout-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.navbar * {
+  pointer-events: auto;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-svg {
+  transform: rotate(-35deg);
+}
+
+.brand-text {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: none;
+}
+
+.pill-menu {
+  background: #000000;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 4px 12px 4px 4px;
+  border-radius: 9999px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.plus-circle {
+  width: 28px;
+  height: 28px;
+  background: #ffffff;
+  color: #000000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-text {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.pill-tags {
+  background: #f4f4f6;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.pill-adaptive {
+  background: #f4f4f6;
+  display: flex;
+  align-items: center;
+  padding: 4px 4px 4px 12px;
+  border-radius: 9999px;
+  gap: 8px;
+}
+
+.adaptive-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: #000000;
+  display: none;
+}
+
+.grid-circle {
+  width: 28px;
+  height: 28px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.video-wrapper {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.bg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 64% center;
+}
+
+.footer-wrapper {
+  position: relative;
+  z-index: 30;
+  width: 100%;
+  margin-top: auto;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.72) 50%, transparent 100%);
+  padding: 60px 16px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subtitle-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+}
+
+.main-heading {
+  font-weight: 300;
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #000000;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.footer-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-pill {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #000000;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    padding: 24px 32px;
+  }
+
+  .brand-text {
+    display: block;
+  }
+
+  .pill-tags {
+    display: flex;
+  }
+
+  .adaptive-text {
+    display: block;
+  }
+
+  .plus-circle,
+  .grid-circle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .video-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .bg-video {
+    object-position: 64% center;
+  }
+
+  .footer-wrapper {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 120px 32px 32px 32px;
+  }
+
+  .main-heading {
+    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  }
+}
