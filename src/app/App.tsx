@@ -1,7 +1,12 @@
 import { ChevronRight } from 'lucide-react';
 
+import About from './components/About';
+import Contact from './components/Contact';
 import DashboardPreview from './components/DashboardPreview';
+import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+import Products from './components/Products';
+import Services from './components/Services';
 
 const HERO_VIDEO =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_215831_c6a8989c-d716-4d8d-8745-e972a2eec711.mp4';
@@ -44,6 +49,12 @@ export default function App() {
           <DashboardPreview />
         </div>
       </section>
+
+      <Services />
+      <Products />
+      <About />
+      <Contact />
+      <Footer />
     </main>
   );
 }
