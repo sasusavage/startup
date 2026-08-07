@@ -1,0 +1,6 @@
+# Normalize to LF in the repo. Keeps Windows checkouts from showing every
+# file as modified, and keeps the Alpine-based Docker build happy.
+* text=auto eol=lf
+
+*.png binary
+*.mp4 binary
