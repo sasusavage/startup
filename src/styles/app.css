@@ -59,27 +59,22 @@ button {
 }
 
 /* ==========================================================================
-   Hero shell — one rounded clip around video + nav + copy + dashboard
+   Hero shell — one rounded clip around nav + copy + dashboard
    ========================================================================== */
 
 .page {
   padding: 0.75rem;
 }
 
+/* Light, low-contrast backdrop so the dark headline always stays readable —
+   a warm wash plus a soft orange bloom behind the badge. */
 .hero {
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-3xl);
-  background: var(--hero-bg);
-}
-
-.hero-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+  background:
+    radial-gradient(80% 55% at 50% 0%, rgb(239 77 35 / 0.1) 0%, transparent 60%),
+    linear-gradient(180deg, #f2efec 0%, var(--hero-bg) 100%);
 }
 
 .hero-inner {

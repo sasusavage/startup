@@ -8,17 +8,12 @@ import Navbar from './components/Navbar';
 import Products from './components/Products';
 import Services from './components/Services';
 
-const HERO_VIDEO =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_215831_c6a8989c-d716-4d8d-8745-e972a2eec711.mp4';
-
 export default function App() {
   return (
     <main className="page">
-      {/* Video, nav, copy and dashboard all share one rounded clip, so the
-          cards bleed off the bottom edge of the hero. */}
+      {/* Nav, copy and dashboard share one rounded clip, so the cards bleed
+          off the bottom edge of the hero. */}
       <section className="hero" id="home">
-        <video className="hero-video" src={HERO_VIDEO} autoPlay muted playsInline loop />
-
         <div className="hero-inner">
           <Navbar />
 
