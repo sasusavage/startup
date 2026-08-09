@@ -82,6 +82,114 @@ button {
   z-index: 1;
 }
 
+/* --- drifting blooms ----------------------------------------------------- */
+
+.orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.orb-a {
+  top: 4%;
+  left: 8%;
+  width: 260px;
+  height: 260px;
+  background: rgb(239 77 35 / 0.3);
+  animation: drift-a 22s ease-in-out infinite;
+}
+
+.orb-b {
+  top: 30%;
+  right: 6%;
+  width: 320px;
+  height: 320px;
+  background: rgb(239 77 35 / 0.18);
+  animation: drift-b 27s ease-in-out infinite;
+}
+
+.orb-c {
+  bottom: 6%;
+  left: 26%;
+  width: 300px;
+  height: 300px;
+  background: rgb(255 176 120 / 0.28);
+  animation: drift-c 31s ease-in-out infinite;
+}
+
+.orb-d {
+  top: 12%;
+  left: 52%;
+  width: 200px;
+  height: 200px;
+  background: rgb(239 77 35 / 0.14);
+  animation: drift-a 19s ease-in-out infinite reverse;
+}
+
+@keyframes drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(40px, 30px, 0) scale(1.12);
+  }
+}
+
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-50px, 24px, 0) scale(0.9);
+  }
+}
+
+@keyframes drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(30px, -36px, 0) scale(1.08);
+  }
+}
+
+/* Blur is expensive on low-end phones — shrink the blooms on small screens. */
+@media (max-width: 639px) {
+  .orb {
+    filter: blur(44px);
+  }
+
+  .orb-a,
+  .orb-b,
+  .orb-c,
+  .orb-d {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb {
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @media (min-width: 640px) {
   .page {
     padding: 1rem;
@@ -697,8 +805,14 @@ html {
   margin-top: 1.75rem;
 }
 
+/* Reveal wraps each card in a div, so the wrapper has to carry the stretch. */
+.product-cell {
+  display: flex;
+}
+
 .product-card {
   display: flex;
+  flex: 1;
   flex-direction: column;
   padding: 1.25rem;
   background: var(--tray-bg);

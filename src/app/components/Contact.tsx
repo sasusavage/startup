@@ -1,11 +1,12 @@
 import { ChevronRight } from 'lucide-react';
 
+import Reveal from './Reveal';
 import { CONTACTS } from '../data/site';
 
 export default function Contact() {
   return (
     <section className="section" id="contact">
-      <div className="contact-panel">
+      <Reveal className="contact-panel">
         <h2 className="contact-title">
           Got something to <span className="serif">build</span>?
         </h2>
@@ -28,7 +29,7 @@ export default function Contact() {
             </a>
           ))}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

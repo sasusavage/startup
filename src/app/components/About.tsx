@@ -1,8 +1,17 @@
+import Reveal from './Reveal';
+
+const FACTS = [
+  { term: 'Business', value: 'Sole proprietorship' },
+  { term: 'Nature', value: 'Services' },
+  { term: 'Focus', value: 'Web, SaaS & AI' },
+  { term: 'Based in', value: 'Ghana, working remotely' },
+];
+
 export default function About() {
   return (
     <section className="section" id="about">
       <div className="about">
-        <div className="about-copy">
+        <Reveal className="about-copy">
           <p className="eyebrow">
             <span className="eyebrow-dot" />
             Who we are
@@ -17,26 +26,18 @@ export default function About() {
             products, customize the systems you already run, and keep all of it maintained after
             launch. Some of what we build becomes a service you can integrate directly.
           </p>
-        </div>
+        </Reveal>
 
-        <dl className="about-facts">
-          <div className="about-fact">
-            <dt>Business</dt>
-            <dd>Sole proprietorship</dd>
-          </div>
-          <div className="about-fact">
-            <dt>Nature</dt>
-            <dd>Services</dd>
-          </div>
-          <div className="about-fact">
-            <dt>Focus</dt>
-            <dd>Web, SaaS &amp; AI</dd>
-          </div>
-          <div className="about-fact">
-            <dt>Based in</dt>
-            <dd>Ghana, working remotely</dd>
-          </div>
-        </dl>
+        <Reveal delay={0.1}>
+          <dl className="about-facts">
+            {FACTS.map((fact) => (
+              <div className="about-fact" key={fact.term}>
+                <dt>{fact.term}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
       </div>
     </section>
   );

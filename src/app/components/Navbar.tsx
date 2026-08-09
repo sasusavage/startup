@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Mail, Menu } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import Logo from './Logo';
+import { EASE } from '../motion';
 
 type NavItem = {
   label: string;
@@ -23,7 +25,12 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="nav-wrapper">
+    <motion.div
+      className="nav-wrapper"
+      initial={{ opacity: 0, y: -16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: EASE }}
+    >
       <nav className="nav-pill">
         <a className="nav-brand" href="#home" aria-label="SasuSync home">
           <Logo className="nav-logo" />
@@ -85,6 +92,6 @@ export default function Navbar() {
           </div>
         )}
       </nav>
-    </div>
+    </motion.div>
   );
 }
