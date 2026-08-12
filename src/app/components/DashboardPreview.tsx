@@ -1,6 +1,8 @@
-import { ChevronDown, TrendingDown, TrendingUp, X } from 'lucide-react';
+import { useState } from 'react';
+import { TrendingDown, TrendingUp } from 'lucide-react';
 
 import Gauge from './Gauge';
+import { useQuote } from '../QuoteContext';
 
 /**
  * Placeholder previews for the subdomain services. The admin dashboard will
@@ -15,6 +17,8 @@ export type ServicePreview = {
   caption: string;
   gaugeLabel?: string;
   gauge: number;
+  /** Shown when the second toggle option is selected. */
+  gaugeAlt: number;
   gaugeColor?: string;
   gaugeMin?: string;
   gaugeMax?: string;
@@ -31,6 +35,7 @@ export const SERVICE_PREVIEWS: ServicePreview[] = [
     caption: 'Compared to yesterday',
     gaugeLabel: 'Month target achieved',
     gauge: 92,
+    gaugeAlt: 78,
     gaugeMin: '389K',
     gaugeMax: '425K',
     toggle: ['Delivered', 'Sent'],
@@ -43,12 +48,14 @@ export const SERVICE_PREVIEWS: ServicePreview[] = [
     trend: 'up',
     caption: 'Compared to yesterday',
     gauge: 68,
+    gaugeAlt: 41,
     gaugeColor: '#9ca3af',
     toggle: ['Response', 'Incidents'],
   },
 ];
 
 function ServiceCard({ data }: { data: ServicePreview }) {
+  const [active, setActive] = useState(0);
   const TrendIcon = data.trend === 'down' ? TrendingDown : TrendingUp;
 
   return (
@@ -71,45 +78,93 @@ function ServiceCard({ data }: { data: ServicePreview }) {
       {data.gaugeLabel && <p className="card-gauge-label">{data.gaugeLabel}</p>}
 
       <Gauge
-        value={data.gauge}
+        value={active === 0 ? data.gauge : data.gaugeAlt}
         color={data.gaugeColor}
         showLabels={Boolean(data.gaugeMin)}
         min={data.gaugeMin}
         max={data.gaugeMax}
       />
 
-      <div className="toggle">
-        <span className="toggle-option toggle-option-active">{data.toggle[0]}</span>
-        <span className="toggle-option">{data.toggle[1]}</span>
+      <div className="toggle" role="group">
+        {data.toggle.map((option, i) => (
+          <button
+            type="button"
+            key={option}
+            className={i === active ? 'toggle-option toggle-option-active' : 'toggle-option'}
+            aria-pressed={i === active}
+            onClick={() => setActive(i)}
+          >
+            {option}
+          </button>
+        ))}
       </div>
     </article>
   );
 }
 
+const PROJECT_TYPES = ['A website', 'A web app', 'A SaaS product', 'An AI integration', 'An API'];
+const TIMELINES = ['This month', 'Next month', 'This quarter', 'Still exploring'];
+
 function QuoteCard() {
+  const { setPrefill } = useQuote();
+  const [type, setType] = useState(PROJECT_TYPES[0]);
+  const [timeline, setTimeline] = useState(TIMELINES[0]);
+  const [pages, setPages] = useState('10');
+  const [integrations, setIntegrations] = useState('3');
+
+  function requestQuote() {
+    setPrefill(
+      [
+        `Project: ${type}`,
+        `Timeline: ${timeline}`,
+        `Pages: ${pages}`,
+        `Integrations: ${integrations}`,
+        '',
+        '',
+      ].join('\n'),
+    );
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
   return (
     <article className="card card-form">
       <label className="field">
         <span className="field-label">What do you need</span>
-        <button type="button" className="field-select">
-          A website
-          <ChevronDown size={14} strokeWidth={2} />
-        </button>
+        <select
+          className="field-select"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+        >
+          {PROJECT_TYPES.map((option) => (
+            <option key={option}>{option}</option>
+          ))}
+        </select>
       </label>
 
       <label className="field">
         <span className="field-label">When do we start</span>
-        <button type="button" className="field-select">
-          This month
-          <ChevronDown size={14} strokeWidth={2} />
-        </button>
+        <select
+          className="field-select"
+          value={timeline}
+          onChange={(e) => setTimeline(e.target.value)}
+        >
+          {TIMELINES.map((option) => (
+            <option key={option}>{option}</option>
+          ))}
+        </select>
       </label>
 
       <label className="field">
         <span className="field-label">Pages</span>
         <span className="field-input">
           <span className="field-prefix">#</span>
-          10
+          <input
+            type="number"
+            min="1"
+            value={pages}
+            onChange={(e) => setPages(e.target.value)}
+            aria-label="Number of pages"
+          />
         </span>
       </label>
 
@@ -117,14 +172,23 @@ function QuoteCard() {
         <span className="field-label">Integrations</span>
         <span className="field-input">
           <span className="field-prefix">#</span>
-          3
+          <input
+            type="number"
+            min="0"
+            value={integrations}
+            onChange={(e) => setIntegrations(e.target.value)}
+            aria-label="Number of integrations"
+          />
         </span>
       </label>
 
       <footer className="card-form-footer">
-        <span className="btn-save">Request quote</span>
-        <span className="btn-cancel">Cancel</span>
-        <X size={16} strokeWidth={2} className="card-form-close" />
+        <button type="button" className="btn-save" onClick={requestQuote}>
+          Request quote
+        </button>
+        <a className="btn-cancel" href="#services">
+          See services
+        </a>
       </footer>
     </article>
   );

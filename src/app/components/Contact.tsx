@@ -1,5 +1,4 @@
-import { ChevronRight } from 'lucide-react';
-
+import ContactForm from './ContactForm';
 import Reveal from './Reveal';
 import { CONTACTS } from '../data/site';
 
@@ -15,12 +14,7 @@ export default function Contact() {
           Tell us what you have in mind. We&apos;ll come back with a plan and a price.
         </p>
 
-        <a className="contact-cta" href="mailto:sasuisaac332@gmail.com">
-          Start a project
-          <span className="contact-cta-chevron">
-            <ChevronRight size={16} strokeWidth={2.5} />
-          </span>
-        </a>
+        <ContactForm />
 
         <div className="contact-links">
           {CONTACTS.map((contact) => (

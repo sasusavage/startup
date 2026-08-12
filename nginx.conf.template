@@ -1,0 +1,33 @@
+# Rendered at container start by nginx's envsubst entrypoint, which substitutes
+# only the variables named below. TELEGRAM_BOT_TOKEN never reaches the browser.
+
+# Cap enquiry submissions: the proxy below sends to your chat using your token,
+# so an open endpoint is an open spam funnel.
+limit_req_zone $binary_remote_addr zone=contact:10m rate=6r/m;
+
+server {
+  listen 80;
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  location ~* \.(?:css|js|jpg|jpeg|gif|png|svg|ico|webp|woff2?)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+  }
+
+  # Contact form -> Telegram. The bot token lives here, server-side only.
+  location = /api/contact {
+    limit_req zone=contact burst=3 nodelay;
+    limit_except POST { deny all; }
+
+    proxy_pass https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage;
+    proxy_ssl_server_name on;
+    proxy_set_header Host api.telegram.org;
+    proxy_hide_header Set-Cookie;
+  }
+}
