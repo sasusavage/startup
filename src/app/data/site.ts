@@ -28,28 +28,28 @@ export type Contact = {
 
 export const SERVICES: Service[] = [
   {
-    title: 'Web design',
-    body: 'Interfaces designed for the phone first, then scaled up to desktop.',
+    title: 'Web design & UI/UX',
+    body: 'Interfaces designed for the phone first, then scaled up — clear, fast, and built to feel effortless.',
   },
   {
-    title: 'Web development',
-    body: 'Fast, accessible sites and web apps, built to hold up over time.',
+    title: 'Full-stack development',
+    body: 'Python and Flask on the back, modern JavaScript on the front. One team for the whole build.',
+  },
+  {
+    title: 'Backend & APIs',
+    body: 'Resilient services, REST APIs, webhooks and database design that hold up under real traffic.',
+  },
+  {
+    title: 'AI development',
+    body: 'LLM-powered assistants, research tools and automations wired into the systems you already run.',
+  },
+  {
+    title: 'Commerce & booking',
+    body: 'Storefronts with cart and checkout, scheduling systems with real-time availability, payments included.',
   },
   {
     title: 'Maintenance',
-    body: 'Updates, backups, uptime monitoring and fixes — handled for you.',
-  },
-  {
-    title: 'SaaS products',
-    body: 'We build and ship your product end to end, from database to billing.',
-  },
-  {
-    title: 'Customization',
-    body: 'Already have a system? We extend, integrate and reshape it around you.',
-  },
-  {
-    title: 'AI integrations',
-    body: 'Assistants, automations and AI features wired into your existing stack.',
+    body: 'Updates, backups, uptime monitoring and fixes — we stay on long after launch day.',
   },
 ];
 
@@ -67,7 +67,9 @@ export const PRODUCTS: Product[] = [
 export const CONTACTS: Contact[] = [
   { label: 'Email', href: 'mailto:sasuisaac332@gmail.com' },
   { label: 'WhatsApp', href: 'https://wa.me/233201142183' },
+  { label: 'Call', href: 'tel:+233201142183' },
   { label: 'GitHub', href: 'https://github.com/sasusavage' },
-  { label: 'X', href: 'https://x.com/sasu_savagee' },
   { label: 'LinkedIn', href: 'https://linkedin.com/in/isaac-sasu-56787133a' },
+  { label: 'X', href: 'https://x.com/sasu_savagee' },
+  { label: 'Instagram', href: 'https://www.instagram.com/i.o.sasu' },
 ];

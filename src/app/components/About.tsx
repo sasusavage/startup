@@ -1,9 +1,9 @@
 import Reveal from './Reveal';
 
 const FACTS = [
-  { term: 'Business', value: 'Sole proprietorship' },
-  { term: 'Nature', value: 'Services' },
-  { term: 'Focus', value: 'Web, SaaS & AI' },
+  { term: 'Led by', value: 'Sasu Isaac Osafo' },
+  { term: 'Core stack', value: 'Python, Flask, React' },
+  { term: 'Focus', value: 'Backend, AI & UI/UX' },
   { term: 'Based in', value: 'Ghana, working remotely' },
 ];
 
@@ -22,10 +22,24 @@ export default function About() {
           </h2>
 
           <p className="section-lead about-lead">
-            SasuSync is a web design and software studio. We design and develop websites, build SaaS
-            products, customize the systems you already run, and keep all of it maintained after
-            launch. Some of what we build becomes a service you can integrate directly.
+            SasuSync is the studio of Sasu Isaac Osafo — a full-stack developer and UI/UX designer
+            working out of Ghana. The work runs from resilient Python backends and REST APIs to the
+            interface sitting on top of them: online stores, booking systems, AI research tools.
           </p>
+
+          <p className="section-lead about-lead">
+            Same hands design it and build it, which is why it ships. Some of what we build becomes
+            a service you can plug straight into your own system.
+          </p>
+
+          <a
+            className="link-underline about-link"
+            href="https://sasu.sasulabs.me"
+            target="_blank"
+            rel="noreferrer"
+          >
+            See the work behind it
+          </a>
         </Reveal>
 
         <Reveal delay={0.1}>

@@ -894,6 +894,18 @@ html {
   max-width: none;
 }
 
+/* Reveal's wrapper is not a flex column, so this can't ride on margin-top:auto. */
+.about-link {
+  display: inline-block;
+  margin-top: 1.25rem;
+}
+
+.footer-note a {
+  color: var(--neutral-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .about-facts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

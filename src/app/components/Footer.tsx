@@ -17,7 +17,13 @@ export default function Footer() {
         ))}
       </nav>
 
-      <p className="footer-note">© {new Date().getFullYear()} SasuSync. All rights reserved.</p>
+      <p className="footer-note">
+        © {new Date().getFullYear()} SasuSync. Built by{' '}
+        <a href="https://sasu.sasulabs.me" target="_blank" rel="noreferrer">
+          Sasu Isaac Osafo
+        </a>
+        .
+      </p>
     </footer>
   );
 }
