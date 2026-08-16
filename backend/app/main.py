@@ -41,8 +41,20 @@ def seed_products() -> None:
         logger.info("Seeded %d product(s)", len(SEED_PRODUCTS))
 
 
+def check_required_config() -> None:
+    """Fail loudly and early. An unset DATABASE_URL otherwise falls back to the
+    local default, which does not exist in production, and the first symptom is
+    a confusing connection error on the first form submission instead."""
+    if not settings.database_url or "@db:5432" in settings.database_url:
+        raise RuntimeError(
+            "DATABASE_URL is not set. Add it in Coolify → Environment Variables."
+        )
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    check_required_config()
+
     # Shared Postgres: only ever touch our own schema. create_all is
     # checkfirst by default, so it never redefines what already exists —
     # and it cannot see the portfolio site's tables in public at all.
