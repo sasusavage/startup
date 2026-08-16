@@ -1,0 +1,29 @@
+# The database is external and shared with the SMS platform (venfy2), so there
+# is deliberately no postgres service here. DATABASE_URL points at it, and our
+# tables live in their own schema (DB_SCHEMA) well away from public.
+
+services:
+  api:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL in .env}
+      DB_SCHEMA: ${DB_SCHEMA:-sasusync_site}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://sasusync.com,https://www.sasusync.com}
+    expose:
+      - '8000'
+
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      API_UPSTREAM: api:8000
+    ports:
+      - '${WEB_PORT:-80}:80'
+    depends_on:
+      - api

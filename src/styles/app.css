@@ -795,6 +795,16 @@ select.field-select {
   }
 }
 
+/* Honeypot — off-screen rather than display:none, which some bots detect. */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .form-error {
   margin: 0;
   font-size: 13px;

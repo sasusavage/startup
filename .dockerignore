@@ -4,3 +4,7 @@ dist
 .github
 *.log
 README*
+backend
+.env
+.env.*
+!.env.example

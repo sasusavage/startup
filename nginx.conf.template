@@ -1,8 +1,6 @@
-# Rendered at container start by nginx's envsubst entrypoint, which substitutes
-# only the variables named below. TELEGRAM_BOT_TOKEN never reaches the browser.
+# Rendered at container start by nginx's envsubst entrypoint.
+# API_UPSTREAM is the backend address, e.g. "api:8000".
 
-# Cap enquiry submissions: the proxy below sends to your chat using your token,
-# so an open endpoint is an open spam funnel.
 limit_req_zone $binary_remote_addr zone=contact:10m rate=6r/m;
 
 server {
@@ -20,14 +18,18 @@ server {
     add_header Cache-Control "public, immutable";
   }
 
-  # Contact form -> Telegram. The bot token lives here, server-side only.
+  # Contact form. Rate limited because each call sends a Telegram message.
   location = /api/contact {
     limit_req zone=contact burst=3 nodelay;
-    limit_except POST { deny all; }
+    limit_except POST OPTIONS { deny all; }
 
-    proxy_pass https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage;
-    proxy_ssl_server_name on;
-    proxy_set_header Host api.telegram.org;
-    proxy_hide_header Set-Cookie;
+    proxy_pass http://${API_UPSTREAM};
+    include /etc/nginx/proxy_headers.conf;
+  }
+
+  # Everything else the API owns: products, admin, docs, health.
+  location /api/ {
+    proxy_pass http://${API_UPSTREAM};
+    include /etc/nginx/proxy_headers.conf;
   }
 }

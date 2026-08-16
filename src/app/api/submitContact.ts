@@ -1,18 +1,12 @@
 /**
- * The single seam between the site and wherever enquiries go.
+ * The single seam between the site and the backend.
  *
- * Today that's nginx proxying to the Telegram Bot API (see nginx.conf.template).
- * The bot token lives in nginx, never in this bundle — anything referenced here
- * ends up readable in the browser, so the token must not be.
- *
- * When the Python/PostgreSQL backend lands, only ENDPOINT and the body shape
- * below need to change. Nothing else on the site touches the network.
+ * No credentials live here. The browser posts to our own API, and the backend
+ * holds the Telegram token and chat id — anything referenced in this file ends
+ * up readable in the shipped bundle.
  */
 
 const ENDPOINT = '/api/contact';
-
-/** Not secret — a chat id is useless to anyone without the bot token. */
-const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID ?? '';
 
 export type ContactPayload = {
   name: string;
@@ -20,35 +14,27 @@ export type ContactPayload = {
   phone: string;
   subject: string;
   message: string;
+  /** Honeypot — must stay empty. Real people never see this field. */
+  website: string;
 };
 
-function formatMessage(data: ContactPayload): string {
-  return [
-    '🔔 New enquiry — sasusync.com',
-    '',
-    `Name: ${data.name}`,
-    `Email: ${data.email}`,
-    data.phone ? `Phone: ${data.phone}` : '',
-    data.subject ? `Subject: ${data.subject}` : '',
-    '',
-    data.message,
-  ]
-    .filter(Boolean)
-    .join('\n');
-}
+export type ContactResult = {
+  ok: boolean;
+  /** False when we stored the enquiry but Telegram delivery failed. */
+  delivered: boolean;
+};
 
-export async function submitContact(data: ContactPayload): Promise<void> {
+export async function submitContact(data: ContactPayload): Promise<ContactResult> {
   const response = await fetch(ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: formatMessage(data),
-      disable_web_page_preview: true,
-    }),
+    body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error(`Enquiry endpoint returned ${response.status}`);
+    const detail = await response.text().catch(() => '');
+    throw new Error(detail ? `${response.status}: ${detail.slice(0, 140)}` : `${response.status}`);
   }
+
+  return (await response.json()) as ContactResult;
 }

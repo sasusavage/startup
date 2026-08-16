@@ -7,7 +7,7 @@ import { useQuote } from '../QuoteContext';
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
-const EMPTY = { name: '', email: '', phone: '', subject: '', message: '' };
+const EMPTY = { name: '', email: '', phone: '', subject: '', message: '', website: '' };
 
 export default function ContactForm() {
   const { prefill } = useQuote();
@@ -117,6 +117,17 @@ export default function ContactForm() {
           onChange={(e) => update('message', e.target.value)}
         />
       </label>
+
+      {/* Honeypot. Hidden from people, irresistible to bots. */}
+      <input
+        type="text"
+        className="hp-field"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        value={values.website}
+        onChange={(e) => update('website', e.target.value)}
+      />
 
       {status === 'error' && (
         <p className="form-error" role="alert">

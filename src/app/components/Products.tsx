@@ -1,9 +1,26 @@
+import { useEffect, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
 import Reveal from './Reveal';
+import { fetchProducts } from '../api/fetchProducts';
 import { PRODUCTS } from '../data/site';
+import type { Product } from '../data/site';
 
 export default function Products() {
+  // Starts on the built-in list so there is never an empty flash, then swaps
+  // in whatever the admin has published.
+  const [items, setItems] = useState<Product[]>(PRODUCTS);
+
+  useEffect(() => {
+    let active = true;
+    fetchProducts().then((rows) => {
+      if (active) setItems(rows);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <section className="section" id="products">
       <Reveal>
@@ -22,7 +39,7 @@ export default function Products() {
       </Reveal>
 
       <div className="product-grid">
-        {PRODUCTS.map((product, i) => (
+        {items.map((product, i) => (
           <Reveal className="product-cell" key={product.domain} delay={i * 0.06}>
             <a className="product-card" href={product.href} target="_blank" rel="noreferrer">
               <header className="product-head">
@@ -50,7 +67,7 @@ export default function Products() {
           </Reveal>
         ))}
 
-        <Reveal className="product-cell" delay={PRODUCTS.length * 0.06}>
+        <Reveal className="product-cell" delay={items.length * 0.06}>
           <div className="product-card product-card-empty">
             <header className="product-head">
               <span className="product-name">More on the way</span>
