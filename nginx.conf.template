@@ -9,6 +9,14 @@ server {
   root /usr/share/nginx/html;
   index index.html;
 
+  # Docker's embedded DNS. Paired with the variable in proxy_pass below, this
+  # defers name resolution to request time. Without it nginx resolves the
+  # upstream at startup and REFUSES TO BOOT if the API is down or absent —
+  # taking the whole static site with it. This way the site always serves and
+  # only /api/* returns 502 when the backend is missing.
+  resolver 127.0.0.11 ipv6=off valid=10s;
+  set $api_upstream "${API_UPSTREAM}";
+
   location / {
     try_files $uri $uri/ /index.html;
   }
@@ -23,13 +31,13 @@ server {
     limit_req zone=contact burst=3 nodelay;
     limit_except POST OPTIONS { deny all; }
 
-    proxy_pass http://${API_UPSTREAM};
+    proxy_pass http://$api_upstream$request_uri;
     include /etc/nginx/proxy_headers.conf;
   }
 
   # Everything else the API owns: products, admin, docs, health.
   location /api/ {
-    proxy_pass http://${API_UPSTREAM};
+    proxy_pass http://$api_upstream$request_uri;
     include /etc/nginx/proxy_headers.conf;
   }
 }
