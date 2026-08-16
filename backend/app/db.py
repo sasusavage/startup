@@ -1,9 +1,14 @@
+import logging
+import time
 from collections.abc import Generator
 
 from sqlalchemy import MetaData, create_engine, event, text
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 from .config import get_settings
+
+logger = logging.getLogger(__name__)
 
 settings = get_settings()
 
@@ -48,10 +53,47 @@ class Base(DeclarativeBase):
     metadata = MetaData(schema=settings.db_schema)
 
 
-def ensure_schema() -> None:
-    """create_all() will not create the schema itself."""
-    with engine.begin() as connection:
-        connection.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{settings.db_schema}"'))
+def ensure_schema(attempts: int = 5, base_delay: float = 2.0) -> None:
+    """create_all() will not create the schema itself.
+
+    Retried with backoff: the database is external, so a restart or a slow
+    network on our side must not turn into a crash-looping API. Only the
+    startup path retries — request-time failures still surface immediately.
+    """
+    last_error: Exception | None = None
+
+    for attempt in range(1, attempts + 1):
+        try:
+            with engine.begin() as connection:
+                connection.execute(
+                    text(f'CREATE SCHEMA IF NOT EXISTS "{settings.db_schema}"')
+                )
+            return
+        except OperationalError as exc:
+            last_error = exc
+            if attempt == attempts:
+                break
+            delay = base_delay * (2 ** (attempt - 1))
+            logger.warning(
+                "Database unreachable (attempt %d/%d), retrying in %.0fs: %s",
+                attempt,
+                attempts,
+                delay,
+                _summarize(exc),
+            )
+            time.sleep(delay)
+
+    raise RuntimeError(
+        "Could not reach the database. Check DATABASE_URL points at a host this "
+        f"container can resolve. Last error: {_summarize(last_error)}"
+    ) from last_error
+
+
+def _summarize(exc: Exception | None) -> str:
+    """First line only — the full SQLAlchemy traceback buries the real cause."""
+    if exc is None:
+        return "unknown"
+    return str(exc).strip().splitlines()[0]
 
 
 def get_db() -> Generator[Session, None, None]:
