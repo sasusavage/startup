@@ -23,7 +23,7 @@ engine = create_engine(
     # handed to a request and blows up with "connection already closed".
     pool_pre_ping=True,
     pool_recycle=1800,
-    # This Postgres is shared with the live SMS platform. Stay a modest
+    # This Postgres is shared with the live portfolio site. Stay a modest
     # tenant rather than eating the server's connection budget.
     pool_size=5,
     max_overflow=5,
@@ -44,7 +44,7 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False
 
 class Base(DeclarativeBase):
     # Everything we define lands in our own schema, never in public, which
-    # belongs to the SMS platform.
+    # belongs to the portfolio site.
     metadata = MetaData(schema=settings.db_schema)
 
 

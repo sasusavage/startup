@@ -45,7 +45,7 @@ def seed_products() -> None:
 async def lifespan(_: FastAPI):
     # Shared Postgres: only ever touch our own schema. create_all is
     # checkfirst by default, so it never redefines what already exists —
-    # and it cannot see the SMS platform's tables in public at all.
+    # and it cannot see the portfolio site's tables in public at all.
     ensure_schema()
     Base.metadata.create_all(bind=engine)
     seed_products()

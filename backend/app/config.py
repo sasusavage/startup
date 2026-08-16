@@ -10,9 +10,9 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql://sasusync:sasusync@db:5432/sasusync"
 
-    # This Postgres is shared with the SMS platform (venfy2), which owns the
-    # public schema: accounts, apps, messages, sms_jobs, contacts, and more.
-    # Our tables live in their own schema so the two can never collide.
+    # This Postgres is shared with the portfolio site (../port), which owns the
+    # public schema: admins, projects, site_content. Our tables live in their
+    # own schema so the two can never collide.
     db_schema: str = "sasusync_site"
 
     # From @BotFather. Stays server-side — never sent to the browser.

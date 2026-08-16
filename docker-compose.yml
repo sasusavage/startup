@@ -1,6 +1,6 @@
-# The database is external and shared with the SMS platform (venfy2), so there
-# is deliberately no postgres service here. DATABASE_URL points at it, and our
-# tables live in their own schema (DB_SCHEMA) well away from public.
+# The database is external and shared with the portfolio site (../port), so
+# there is deliberately no postgres service here. DATABASE_URL points at it,
+# and our tables live in their own schema (DB_SCHEMA) well away from public.
 
 services:
   api:
