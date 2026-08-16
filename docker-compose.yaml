@@ -14,6 +14,8 @@ services:
     build: ./backend
     restart: unless-stopped
     environment:
+      # No SERVICE_FQDN here on purpose — the API must not get a public domain.
+      # It is reached only through nginx at /api/*, on the internal network.
       DATABASE_URL: ${DATABASE_URL}
       DB_SCHEMA: ${DB_SCHEMA:-sasusync_site}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
@@ -39,9 +41,12 @@ services:
     build: .
     restart: unless-stopped
     environment:
-      # Coolify attaches your domain to this service.
-      SERVICE_FQDN_WEB_80: ${SERVICE_FQDN_WEB_80:-}
-      API_UPSTREAM: api:8000
+      # Coolify magic variable: SERVICE_FQDN_<SERVICE>_<PORT>, declared bare.
+      # Coolify fills it in and generates the proxy route for this service.
+      # Giving it a value (even an empty default) stops that happening, and
+      # nothing gets routed to the site at all.
+      - SERVICE_FQDN_WEB_80
+      - API_UPSTREAM=api:8000
     expose:
       - '80'
     depends_on:
