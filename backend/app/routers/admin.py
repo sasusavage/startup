@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -11,6 +11,7 @@ from ..schemas import (
     ProductIn,
     TokenOut,
 )
+from ..lockout import attempts_left, check_not_locked, record_failure, record_success
 from ..security import create_token, require_admin, verify_admin
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -33,11 +34,22 @@ def _to_out(row: Product) -> ProductAdminOut:
 
 
 @router.post("/login", response_model=TokenOut)
-def login(payload: LoginIn) -> TokenOut:
+def login(payload: LoginIn, request: Request) -> TokenOut:
+    # Checked before the password is compared, so a locked-out caller learns
+    # nothing about whether their guess was right.
+    check_not_locked(request)
+
     if not verify_admin(payload.email, payload.password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
-        )
+        record_failure(request)
+        remaining = attempts_left(request)
+        detail = "Invalid credentials."
+        if remaining:
+            detail += f" {remaining} attempt{'' if remaining == 1 else 's'} left before lockout."
+        else:
+            detail = "Invalid credentials. This address is now locked out."
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail)
+
+    record_success(request)
     return TokenOut(access_token=create_token(payload.email))
 
 

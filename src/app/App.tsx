@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import { MotionConfig, motion } from 'motion/react';
 
+import AdminApp from './admin/AdminApp';
 import About from './components/About';
 import Contact from './components/Contact';
 import DashboardPreview from './components/DashboardPreview';
@@ -13,6 +14,12 @@ import { EASE, fadeUp, stagger } from './motion';
 import { QuoteProvider } from './QuoteContext';
 
 export default function App() {
+  // No router dependency — the site is one page plus /admin, and the server
+  // serves index.html for both, so a path check is all this needs.
+  if (window.location.pathname.replace(/\/+$/, '') === '/admin') {
+    return <AdminApp />;
+  }
+
   return (
     // reducedMotion="user" makes every motion component below respect the
     // viewer's OS "reduce motion" setting without extra wiring.

@@ -26,6 +26,13 @@ class Settings(BaseSettings):
     jwt_secret: str = ""
     jwt_ttl_hours: int = 12
 
+    # Failed admin logins before the lockout kicks in, and how long it lasts.
+    # Deliberately harsh. The counter is per-IP and held in memory, so a
+    # redeploy clears every lockout — that is the way back in if you lock
+    # yourself out with a typo.
+    admin_max_attempts: int = 2
+    admin_lockout_hours: int = 72
+
     # Origins allowed to call this API from a browser.
     cors_origins: str = "http://localhost:5173,https://sasusync.com,https://www.sasusync.com"
 
