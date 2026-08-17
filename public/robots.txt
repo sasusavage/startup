@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Nothing useful to index here, and no reason to advertise them.
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://sasusync.com/sitemap.xml
