@@ -70,6 +70,7 @@ export const CONTACTS: Contact[] = [
   { label: 'Call', href: 'tel:+233201142183' },
   { label: 'GitHub', href: 'https://github.com/sasusavage' },
   { label: 'LinkedIn', href: 'https://linkedin.com/in/isaac-sasu-56787133a' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@snrvibecoder' },
   { label: 'X', href: 'https://x.com/sasu_savagee' },
   { label: 'Instagram', href: 'https://www.instagram.com/i.o.sasu' },
 ];

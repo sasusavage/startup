@@ -21,8 +21,8 @@ export default function Footer() {
         © {new Date().getFullYear()} SasuSync. Built by{' '}
         <a href="https://sasu.sasulabs.me" target="_blank" rel="noreferrer">
           Sasu Isaac Osafo
-        </a>
-        .
+        </a>{' '}
+        (snrvibecoder).
       </p>
     </footer>
   );

@@ -22,9 +22,11 @@ export default function About() {
           </h2>
 
           <p className="section-lead about-lead">
-            SasuSync is the studio of Sasu Isaac Osafo — a full-stack developer and UI/UX designer
-            working out of Ghana. The work runs from resilient Python backends and REST APIs to the
-            interface sitting on top of them: online stores, booking systems, AI research tools.
+            SasuSync is the studio of <strong>Sasu Isaac Osafo</strong>, known online as{' '}
+            <strong>snrvibecoder</strong> — a full-stack developer and UI/UX designer working out of
+            Ghana. The work runs from resilient Python backends and REST APIs to the interface
+            sitting on top of them: online stores, booking systems, school management platforms and
+            AI research tools.
           </p>
 
           <p className="section-lead about-lead">
