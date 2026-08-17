@@ -10,10 +10,10 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <url>
-    <loc>https://sms.sasusync.com/</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <!--
+    sms.sasusync.com is deliberately absent. A sitemap should only list URLs
+    on its own host, and a subdomain counts as a separate host. That service
+    is a different application and needs its own sitemap; Google reaches it
+    meanwhile via the link on the landing page.
+  -->
 </urlset>
