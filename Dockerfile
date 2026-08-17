@@ -1,4 +1,9 @@
-FROM node:20-alpine AS build
+# One container: Node builds the site, then FastAPI serves both the static
+# files and /api from a single process on port 8000.
+#
+# Coolify: Build Pack = Dockerfile, one domain, nothing else to configure.
+
+FROM node:20-alpine AS frontend
 
 WORKDIR /app
 
@@ -8,16 +13,21 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:1.27-alpine AS runtime
 
-# Must be defined or envsubst leaves a literal "${API_UPSTREAM}" in the config,
-# nginx reads it as an unknown variable, and the container won't boot.
-ENV API_UPSTREAM="api:8000"
+FROM python:3.12-slim AS runtime
 
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-COPY proxy_headers.conf /etc/nginx/proxy_headers.conf
-COPY --from=build /app/dist /usr/share/nginx/html
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-EXPOSE 80
+WORKDIR /srv
 
-CMD ["nginx", "-g", "daemon off;"]
+COPY backend/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/app ./app
+# The built site sits next to the app; main.py serves it from here.
+COPY --from=frontend /app/dist ./static
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

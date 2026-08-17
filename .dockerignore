@@ -4,7 +4,14 @@ dist
 .github
 *.log
 README*
-backend
+
+# Secrets never enter the image.
 .env
 .env.*
 !.env.example
+
+# Python build leftovers — the image installs from requirements.txt.
+__pycache__
+**/__pycache__
+*.pyc
+.venv

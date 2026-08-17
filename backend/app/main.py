@@ -1,8 +1,11 @@
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select
 
 from .config import get_settings
@@ -95,3 +98,37 @@ app.include_router(admin.router, prefix="/api")
 @app.get("/api/health")
 def health() -> dict[str, object]:
     return {"ok": True, "telegram": settings.telegram_configured}
+
+
+# ── the website ─────────────────────────────────────────────────────────────
+# Registered last so every /api route above wins the match. The Dockerfile
+# copies the built site here; running the backend alone in local dev simply
+# leaves this directory absent, which is fine — use `npm run dev` for the UI.
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+
+if STATIC_DIR.is_dir():
+    app.mount(
+        "/assets",
+        StaticFiles(directory=STATIC_DIR / "assets"),
+        name="assets",
+    )
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def serve_site(full_path: str) -> FileResponse:
+        # An unmatched /api/* path must 404 as an API, not silently hand back
+        # index.html — that turns a typo into a baffling frontend bug.
+        if full_path.startswith("api/") or full_path == "api":
+            raise HTTPException(status_code=404, detail="Not found")
+
+        candidate = (STATIC_DIR / full_path).resolve()
+        if (
+            full_path
+            and candidate.is_file()
+            and candidate.is_relative_to(STATIC_DIR)  # no path traversal
+        ):
+            return FileResponse(candidate)
+
+        return FileResponse(STATIC_DIR / "index.html")
+
+else:
+    logger.warning("No static/ directory — serving the API only.")

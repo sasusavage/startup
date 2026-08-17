@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from ..db import get_db
 from ..models import Enquiry
+from ..ratelimit import rate_limit
 from ..schemas import ContactIn, ContactOut
 from ..telegram import send_enquiry
 
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["contact"])
 
 
-@router.post("/contact", response_model=ContactOut)
+@router.post("/contact", response_model=ContactOut, dependencies=[Depends(rate_limit)])
 async def submit_contact(payload: ContactIn, db: Session = Depends(get_db)) -> ContactOut:
     # Honeypot. Look successful so the bot doesn't retry, but store nothing.
     if payload.website:
