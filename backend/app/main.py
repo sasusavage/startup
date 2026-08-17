@@ -113,7 +113,11 @@ if STATIC_DIR.is_dir():
         name="assets",
     )
 
-    @app.get("/{full_path:path}", include_in_schema=False)
+    # GET *and* HEAD. FastAPI does not add HEAD to a GET route the way plain
+    # Starlette does, so this returned 405 to any crawler that probes with
+    # HEAD first — which is why Search Console reported "Couldn't fetch" for
+    # a sitemap that a normal GET served perfectly well.
+    @app.api_route("/{full_path:path}", methods=["GET", "HEAD"], include_in_schema=False)
     def serve_site(full_path: str) -> FileResponse:
         # An unmatched /api/* path must 404 as an API, not silently hand back
         # index.html — that turns a typo into a baffling frontend bug.
